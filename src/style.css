@@ -1396,7 +1396,7 @@ footer {
 
 /* Nav */
 .logo-nav {
-  height: 38px;
+  height: 52px;
   width: auto;
   display: block;
   /* A logo tem fundo preto — filter para funcionar em nav branco */
@@ -1435,7 +1435,7 @@ footer {
 
 /* Responsivo nav */
 @media (max-width: 900px) {
-  .logo-nav { height: 32px; }
+  .logo-nav { height: 42px; }
 }
 
 /* ============================================================
@@ -1460,4 +1460,51 @@ footer {
 @media (max-width: 900px) {
   .qs-missao-square { width: 100%; min-width: unset; }
   .qs-missao-square img { aspect-ratio: 4 / 3; }
+}
+
+/* ============================================================
+   MOBILE MENU — logo
+   ============================================================ */
+.mobile-menu-logo {
+  position: absolute;
+  top: 20px;
+  left: 32px;
+}
+.mobile-menu-logo img {
+  height: 40px;
+  width: auto;
+  display: block;
+  filter: brightness(0) saturate(100%) invert(18%) sepia(90%) saturate(700%) hue-rotate(340deg) brightness(85%);
+}
+
+/* ============================================================
+   LOGOS BAR — clientes no mobile
+   ============================================================ */
+.logo-client-img {
+  height: 36px;
+  width: auto;
+  max-width: 140px;
+  object-fit: contain;
+  opacity: 0.85;
+  filter: brightness(0) invert(1);
+  transition: opacity 0.2s ease;
+  flex-shrink: 0;
+}
+.logo-client-img:hover { opacity: 1; }
+
+@media (max-width: 600px) {
+  .logos-track {
+    gap: 24px !important;
+    flex-wrap: nowrap;
+    justify-content: center !important;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: 0 4px;
+  }
+  .logos-track::-webkit-scrollbar { display: none; }
+  .logo-client-img {
+    height: 24px;
+    max-width: 80px;
+  }
 }
