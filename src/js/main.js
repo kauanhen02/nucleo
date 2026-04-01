@@ -28,7 +28,7 @@ function toggleMenu() {
   document.body.style.overflow = isOpen ? 'hidden' : '';
 }
 
-/* ── Formulário de Contato — Web3Forms ── */
+/* ── Formulário de Contato — Web3Forms (submit nativo) ── */
 (function () {
   'use strict';
 
@@ -68,7 +68,7 @@ function toggleMenu() {
     const phoneInput = form.querySelector('[name="phone"]');
     if (phoneInput) maskPhone(phoneInput);
 
-    form.querySelectorAll('input:not([type=hidden]), textarea').forEach(el => {
+    form.querySelectorAll('input:not([type=hidden]):not([type=text][name=botcheck]), textarea').forEach(el => {
       el.addEventListener('blur',  () => validateField(el));
       el.addEventListener('input', () => {
         const g = el.closest('.form-group');
@@ -76,42 +76,19 @@ function toggleMenu() {
       });
     });
 
-    form.addEventListener('submit', async function (e) {
-      e.preventDefault();
-
-      const fields   = [...form.querySelectorAll('input:not([type=hidden]), textarea')];
+    form.addEventListener('submit', function (e) {
+      const fields   = [...form.querySelectorAll('input:not([type=hidden]):not([name=botcheck]), textarea')];
       const allValid = fields.every(f => validateField(f));
-      if (!allValid) { form.querySelector('.field-invalid input, .field-invalid textarea').focus(); return; }
-
-      if (form.querySelector('[name="_honey"]').value) return;
-
-      const btn     = form.querySelector('.btn-enviar');
-      const success = document.getElementById('form-success');
-      const errBox  = document.getElementById('form-error');
-
+      if (!allValid) {
+        e.preventDefault();
+        const first = form.querySelector('.field-invalid input, .field-invalid textarea');
+        if (first) first.focus();
+        return;
+      }
+      // Validação passou — deixa o submit nativo seguir para o Web3Forms
+      const btn = form.querySelector('.btn-enviar');
       btn.disabled = true;
       btn.innerHTML = '<span class="spinner"></span> Enviando...';
-      if (errBox) errBox.style.display = 'none';
-
-      try {
-        const res  = await fetch('https://api.web3forms.com/submit', { method: 'POST', body: new FormData(form) });
-        const json = await res.json();
-
-        if (json.success) {
-          form.reset();
-          form.style.display = 'none';
-          if (success) success.style.display = 'flex';
-        } else {
-          throw new Error(json.message || 'Erro.');
-        }
-      } catch {
-        if (errBox) {
-          errBox.textContent = 'Não foi possível enviar a mensagem. Por favor, tente novamente ou entre em contato por WhatsApp.';
-          errBox.style.display = 'block';
-        }
-        btn.disabled = false;
-        btn.innerHTML = 'Enviar mensagem';
-      }
     });
   }
 
